@@ -1,10 +1,15 @@
+import './index.css'
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
 
-createRoot(document.getElementById('root')!).render(
+import MeetlyApp from './presentation/app.tsx'
+
+const rootItem = document.getElementById('root')!
+const root = createRoot(rootItem)
+
+root.render(
   <StrictMode>
-    <App />
+    <MeetlyApp />
   </StrictMode>,
 )
