@@ -1,15 +1,13 @@
+import { Provider } from "react-redux"
+import { RouterProvider } from "react-router"
+
+import { router } from "./router/app.routes"
+import { store } from "./store/app.store"
+
 export default function MeetlyApp() {
   return (
-    <div className="bg-gradient-to-br from-midnight to-tahiti min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl text-white font-bold underline">
-        Meetly App!!
-      </h1>
-
-      <p
-        className="text-primary"
-      >
-        Test
-      </p>
-    </div>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   )
 }
