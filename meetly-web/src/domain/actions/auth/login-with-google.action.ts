@@ -18,13 +18,21 @@ export async function loginWithGoogleAction(): Promise<AuthResponse> {
     }
   } catch (error: unknown) {
     console.error("Error during Google login:", error)
-    const { code: errorCode, message: errorMessage } = error as ErrorResponse
+    const { code: errorCode } = error as ErrorResponse
+
+    const customError: {
+      [key: string]: string
+    } = {
+      "auth/popup-closed-by-user": "El popup fue cerrado antes de completar la autenticación",
+      "auth/cancelled-popup-request": "Solicitud de popup cancelada",
+      "auth/network-request-failed": "Error de red, por favor, verifica tu conexión a Internet",
+    }
 
     return {
       ok: false,
       user: null,
       errorCode,
-      errorMessage
+      errorMessage: customError[errorCode] || "Error al iniciar sesión con Google"
     }
   }
 }

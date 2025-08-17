@@ -3,7 +3,7 @@ import { Outlet } from "react-router"
 export default function AuthLayout() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary/30 to-background">
-      <main className="grid grid-cols-1 md:grid-cols-2 bg-white rounded-lg shadow-lg max-w-3xl w-full overflow-hidden">
+      <main className="grid grid-cols-1 md:grid-cols-2 bg-white rounded-lg shadow-lg max-w-4xl w-full overflow-hidden">
         <div className="w-full p-8 md:p-12 flex flex-col items-center justify-center">
           <img
             src="/favicon.png"

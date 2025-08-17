@@ -9,6 +9,7 @@ import { login, logout } from "../store/auth/auth.slice"
 import { useMeetlyDispatch, useMeetlySelector } from "./use-store"
 import { registerAction } from "../../domain/actions/auth/register.action"
 import { logoutAction } from "../../domain/actions/auth/logout.action"
+import { loginWithGoogleAction } from "../../domain/actions/auth/login-with-google.action"
 
 export default function useAuthStore() {
   const { status, user, errorMessage } = useMeetlySelector((state) => state.auth)
@@ -58,6 +59,19 @@ export default function useAuthStore() {
     return data
   }
 
+  const handleGoogleLogin = async () => {
+    const data = await loginWithGoogleAction()
+
+    if (data.ok) {
+      dispatch(login(data.user))
+    } else {
+      showErrorAlert(data.errorMessage || "Error al iniciar sesión con Google")
+      dispatch(logout(data.errorMessage))
+    }
+
+    return data
+  }
+
   const handleLogout = async () => {
     await logoutAction()
     dispatch(logout(undefined))
@@ -70,6 +84,7 @@ export default function useAuthStore() {
 
     handleLogin,
     handleRegister,
+    handleGoogleLogin,
     handleLogout,
   }
 }
