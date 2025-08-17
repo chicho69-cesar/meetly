@@ -28,13 +28,23 @@ export async function registerAction({ email, password, fullName }: RegisterActi
     }
   } catch (error: unknown) {
     console.error("Error during registration:", error)
-    const { code: errorCode, message: errorMessage } = error as ErrorResponse
+    const { code: errorCode } = error as ErrorResponse
+
+    const customError: {
+      [key: string]: string
+    } = {
+      "auth/email-already-in-use": "El correo electrónico ya está en uso",
+      "auth/invalid-email": "Correo electrónico inválido",
+      "auth/operation-not-allowed": "Operación no permitida",
+      "auth/weak-password": "La contraseña es demasiado débil",
+      "auth/network-request-failed": "Error de red, por favor, verifica tu conexión a Internet",
+    }
 
     return {
       ok: false,
       user: null,
       errorCode,
-      errorMessage
+      errorMessage: customError[errorCode] || "Error desconocido al registrarse"
     }
   }
 }

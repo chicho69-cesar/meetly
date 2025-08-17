@@ -1,6 +1,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth"
-import type { AuthResponse, ErrorResponse } from "../../../infrastructure/interfaces/auth.response"
 import { auth } from "../../../config/firebase/firebase-config"
+import type { AuthResponse, ErrorResponse } from "../../../infrastructure/interfaces/auth.response"
 import { fromUserToEntity } from "../../../infrastructure/mappers/user.mapper"
 
 interface LoginActionParams {
@@ -21,13 +21,23 @@ export async function loginAction({ email, password }: LoginActionParams): Promi
     }
   } catch (error: unknown) {
     console.error("Error during login:", error)
-    const { code: errorCode, message: errorMessage } = error as ErrorResponse
+    const { code: errorCode } = error as ErrorResponse
+
+    const customError: {
+      [key: string]: string
+    } = {
+      "auth/invalid-credential": "Credenciales inválidas",
+      "auth/user-not-found": "Usuario no encontrado",
+      "auth/wrong-password": "Contraseña incorrecta",
+      "auth/too-many-requests": "Demasiados intentos fallidos, por favor, inténtalo más tarde",
+      "auth/network-request-failed": "Error de red, por favor, verifica tu conexión a Internet",
+    }
 
     return {
       ok: false,
       user: null,
       errorCode,
-      errorMessage
+      errorMessage: customError[errorCode] || "Error desconocido al iniciar sesión"
     }
   }
 }
