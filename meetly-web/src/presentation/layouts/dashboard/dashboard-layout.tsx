@@ -1,6 +1,6 @@
 import { Outlet } from "react-router"
-import Header from "../../components/ui/header"
-import Modal from "../../components/ui/modal"
+import Header from "../../components/ui/header/header"
+import Modal from "../../components/ui/modal/modal"
 import useUI from "../../hooks/use-ui"
 
 export default function DashboardLayout() {

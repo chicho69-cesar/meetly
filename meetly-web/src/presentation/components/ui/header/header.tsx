@@ -1,6 +1,6 @@
 import { Bell, Search, Settings, User } from "lucide-react"
 import { Link } from "react-router"
-import useUI from "../../hooks/use-ui"
+import useUI from "../../../hooks/use-ui"
 
 export default function Header() {
   const { openModal } = useUI()

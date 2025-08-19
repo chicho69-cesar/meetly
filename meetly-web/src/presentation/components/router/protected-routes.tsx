@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from "react"
 import { Navigate } from "react-router"
 import useAuthStore from "../../hooks/use-auth-store"
-import LoadingScreen from "../ui/loading-screen"
+import LoadingScreen from "../ui/loading-screen/loading-screen"
 
 export function AuthenticatedRoute({ children }: PropsWithChildren) {
   const { status } = useAuthStore()
