@@ -9,10 +9,10 @@
     - [ ] Habrá los tipos de vistas que suele haber en el calendario, vista de mes, semana, dia y agenda.
     - [ ] La segunda sección de tareas sera una lista de tareas que se pueden agregar, editar y eliminar.
     - [ ] La sección de tareas tendrá tres vistas distintas, una vista de lista, una vista de tablero kanban y una vista de tabla.
-  - [ ] Habrá un header en el dashboard, el cual tendrá tres secciones:
+  - [x] Habrá un header en el dashboard, el cual tendrá tres secciones:
     - [x] Un logo que al hacer click te llevará al dashboard.
-    - [ ] Un buscador para buscar eventos, reuniones y tareas.
-    - [ ] Tres botones, uno de perfil que al hacer click te abra un modal con la información del usuario y estadísticas básicas de su info, otro de configuración que al hacer click te abra un modal con las opciones de configuración como el tema de la app, tamaño de fuente, diseño, etc. y otro de notificaciones que al hacer click te abra un modal con las notificaciones del usuario.
+    - [x] Un buscador para buscar eventos, reuniones y tareas.
+    - [x] Tres botones, uno de perfil que al hacer click te abra un modal con la información del usuario y estadísticas básicas de su info, otro de configuración que al hacer click te abra un modal con las opciones de configuración como el tema de la app, tamaño de fuente, diseño, etc. y otro de notificaciones que al hacer click te abra un modal con las notificaciones del usuario.
   - [ ] Crear la pantalla de perfil en el modal
   - [ ] Crear la pantalla de configuración en el modal
   - [ ] Crear un formulario en el modal para agregar eventos, reuniones y tareas.
