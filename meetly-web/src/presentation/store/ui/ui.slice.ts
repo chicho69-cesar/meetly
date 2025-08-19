@@ -9,10 +9,10 @@ interface UIState {
 }
 
 const initialState: UIState = (() => {
-  const storedTheme = localStorage.getItem(THEME_STORAGE_KEY)
+  const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
 
   if (storedTheme == null) {
-    localStorage.setItem(THEME_STORAGE_KEY, "indigo")
+    window.localStorage.setItem(THEME_STORAGE_KEY, "indigo")
     return { modal: null, theme: "indigo" }
   }
 
@@ -20,7 +20,7 @@ const initialState: UIState = (() => {
     return { modal: null, theme: storedTheme as UIState["theme"] }
   }
 
-  localStorage.setItem(THEME_STORAGE_KEY, "indigo")
+  window.localStorage.setItem(THEME_STORAGE_KEY, "indigo")
   return { modal: null, theme: "indigo" }
 })()
 
