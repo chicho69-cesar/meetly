@@ -6,10 +6,10 @@ import { uiSlice } from "./ui/ui.slice"
 const persistenceLocalStorageMiddleware: Middleware = (store) => (next) => (action) => {
   next(action)
 
-  window.localStorage.setItem(
-    THEME_STORAGE_KEY,
-    JSON.stringify(store.getState().ui.theme)
-  )
+  const currentTheme = store.getState().ui.theme
+
+  window.localStorage.setItem(THEME_STORAGE_KEY, currentTheme)
+  document.documentElement.setAttribute("data-theme", currentTheme)
 }
 
 export const store = configureStore({

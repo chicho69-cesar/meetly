@@ -11,17 +11,12 @@ interface UIState {
 const initialState: UIState = (() => {
   const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY)
 
-  if (storedTheme == null) {
+  if (!storedTheme) {
     window.localStorage.setItem(THEME_STORAGE_KEY, "indigo")
     return { modal: null, theme: "indigo" }
   }
 
-  if (THEMES_OPTIONS.includes(storedTheme)) {
-    return { modal: null, theme: storedTheme as UIState["theme"] }
-  }
-
-  window.localStorage.setItem(THEME_STORAGE_KEY, "indigo")
-  return { modal: null, theme: "indigo" }
+  return { modal: null, theme: storedTheme as Theme || "indigo" }
 })()
 
 export const uiSlice = createSlice({
