@@ -1,11 +1,12 @@
+import Calendar from "../../components/calendar/calendar/calendar"
 import useAuthStore from "../../hooks/use-auth-store"
 
 export default function DashboardPage() {
   const { handleLogout } = useAuthStore()
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-primary text-center mb-4">
+    <main className="w-full mx-auto max-w-6xl my-12">
+      <h1 className="text-3xl font-bold text-primary mb-4">
         Dashboard
       </h1>
 
@@ -19,6 +20,8 @@ export default function DashboardPage() {
       >
         Cerrar sesión
       </button>
-    </div>
+
+      <Calendar />
+    </main>
   )
 }
