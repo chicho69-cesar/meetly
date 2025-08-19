@@ -61,3 +61,5 @@ export const {
   onError,
   clearErrorMessage
 } = authSlice.actions
+
+export default authSlice.reducer
