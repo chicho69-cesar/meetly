@@ -11,6 +11,7 @@ import Title from "../../components/ui/title/title"
 export default function DashboardPage() {
   const [events, setEvents] = useState([])
   const [lastView, setLastView] = useState<View>(Views.WEEK)
+  const [date, setDate] = useState<Date>(new Date())
 
   const eventStyleGetter = (event: unknown, start: Date, end: Date, isSelected: boolean) => {
     console.log({ event, start, end, isSelected })
@@ -49,9 +50,16 @@ export default function DashboardPage() {
     console.log("Selected slot:", slotInfo)
   }
 
+  const handleNavigate = (newDate: Date) => {
+    setDate(newDate)
+  }
+
   return (
     <main className="w-full mx-auto max-w-6xl my-12">
-      <Title text="Panel de control" subtitle="Bienvenido al panel de control." />
+      <Title
+        text="Panel de control"
+        subtitle="Bienvenido al panel de control."
+      />
 
       <Calendar
         culture="es"
@@ -59,6 +67,7 @@ export default function DashboardPage() {
         events={events}
         defaultView={lastView}
         view={lastView}
+        date={date}
         startAccessor="start"
         endAccessor="end"
         selectable
@@ -72,6 +81,7 @@ export default function DashboardPage() {
         onDoubleClickEvent={handleDoubleClick}
         onSelectEvent={handleSelect}
         onView={handleViewChange}
+        onNavigate={handleNavigate}
       />
     </main>
   )
