@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { THEME_STORAGE_KEY } from "../../../config/constants/storage.constant"
 import { THEMES_OPTIONS } from "../../../config/constants/themes.constant"
+import type { Theme } from "../../../infrastructure/interfaces/theme.interface"
 
 interface UIState {
   modal: null | "bell" | "settings" | "user"
-  theme: "indigo" | "sky" | "emerald" | "purple" | "purplish" | "orange" | "turquoise" | "yellow" | "pink" | "lime"
+  theme: Theme
 }
 
 const initialState: UIState = (() => {
