@@ -1,21 +1,7 @@
 # TODO
 
-- [ ] Crear pantallas de la aplicación
-  - [x] Crear la pantalla de inicio de sesión
-  - [x] Crear la pantalla de registro
-  - [ ] Crear la pantalla de dashboard
-    - [ ] Habrá dos secciones, la sección de calendario con los eventos, reuniones y tareas que hay programados, diferenciado los en el títulos del evento.
-    - [ ] Se podrán agregar eventos, reuniones y tareas desde el dashboard dando click en la fecha y hora en el calendario o con un fab en la parte inferior derecha.
-    - [ ] Habrá los tipos de vistas que suele haber en el calendario, vista de mes, semana, dia y agenda.
-    - [ ] La segunda sección de tareas sera una lista de tareas que se pueden agregar, editar y eliminar.
-    - [ ] La sección de tareas tendrá tres vistas distintas, una vista de lista, una vista de tablero kanban y una vista de tabla.
-  - [x] Habrá un header en el dashboard, el cual tendrá tres secciones:
-    - [x] Un logo que al hacer click te llevará al dashboard.
-    - [x] Un buscador para buscar eventos, reuniones y tareas.
-    - [x] Tres botones, uno de perfil que al hacer click te abra un modal con la información del usuario y estadísticas básicas de su info, otro de configuración que al hacer click te abra un modal con las opciones de configuración como el tema de la app, tamaño de fuente, diseño, etc. y otro de notificaciones que al hacer click te abra un modal con las notificaciones del usuario.
-  - [ ] Crear la pantalla de perfil en el modal
-  - [ ] Crear la pantalla de configuración en el modal
-  - [ ] Crear un formulario en el modal para agregar eventos, reuniones y tareas.
-  - [ ] Crear la pantalla de detalles de un evento, reunión o tarea al hacer click en uno de ellos desde el dashboard, esta se mostrara igual en un modal.
-  - [ ] Crear la pantalla de notificaciones en el modal
-    - [ ] La pantalla de notificaciones mostrará todas las notificaciones del usuario, con la opción de marcarlas como leídas o eliminarlas.
+- [ ] En el calendario poder gestionar los eventos (Crear, Editar, Eliminar), los atributos de los eventos serán: (titulo, descripción, fecha y hora, link de la reunión, tags y color).
+- [ ] La sección de tareas debe permitir crear, editar y eliminar tareas, con los siguientes atributos: (título, descripción, fecha de vencimiento, prioridad y estado).
+- [ ] Mini-dashboard en el modal de notificaciones, Próxima junta, Tareas pendientes hoy, Actividad semanal.
+- [ ] Arrastrar para reprogramar eventos en el calendario.
+- [ ] Offline-first: caché de eventos/tareas con IndexedDB (web) y AsyncStorage (móvil).

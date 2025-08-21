@@ -12,7 +12,7 @@ export default function Title({ text, subtitle }: TitleProps) {
 
       {subtitle && (
         <p className="text-lg text-secondary mb-4">
-          Bienvenido al panel de control.
+          {subtitle}
         </p>
       )}
     </>
