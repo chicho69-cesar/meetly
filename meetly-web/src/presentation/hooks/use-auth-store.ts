@@ -3,13 +3,13 @@ import { useEffect } from "react"
 
 import { showErrorAlert } from "../../config/adapters/alerts"
 import { auth } from "../../config/firebase/firebase-config"
+import { loginWithGoogleAction } from "../../domain/actions/auth/login-with-google.action"
 import { loginAction } from "../../domain/actions/auth/login.action"
-import { fromUserToEntity } from "../../infrastructure/mappers/user.mapper"
+import { logoutAction } from "../../domain/actions/auth/logout.action"
+import { registerAction } from "../../domain/actions/auth/register.action"
+import { UserMapper } from "../../infrastructure/mappers/user.mapper"
 import { login, logout } from "../store/auth/auth.slice"
 import { useMeetlyDispatch, useMeetlySelector } from "./use-store"
-import { registerAction } from "../../domain/actions/auth/register.action"
-import { logoutAction } from "../../domain/actions/auth/logout.action"
-import { loginWithGoogleAction } from "../../domain/actions/auth/login-with-google.action"
 
 export default function useAuthStore() {
   const { status, user, errorMessage } = useMeetlySelector((state) => state.auth)
@@ -22,7 +22,7 @@ export default function useAuthStore() {
         return
       }
 
-      const user = fromUserToEntity(firebaseUser)
+      const user = UserMapper.fromUserToEntity(firebaseUser)
       dispatch(login(user))
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps

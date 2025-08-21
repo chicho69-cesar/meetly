@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth"
 import { auth } from "../../../config/firebase/firebase-config"
 import type { AuthResponse, ErrorResponse } from "../../../infrastructure/interfaces/auth.response"
-import { fromUserToEntity } from "../../../infrastructure/mappers/user.mapper"
+import { UserMapper } from "../../../infrastructure/mappers/user.mapper"
 
 interface RegisterActionParams {
   email: string
@@ -12,7 +12,7 @@ interface RegisterActionParams {
 export async function registerAction({ email, password, fullName }: RegisterActionParams): Promise<AuthResponse> {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password)
-    const user = fromUserToEntity(result.user)
+    const user = UserMapper.fromUserToEntity(result.user)
 
     await updateProfile(auth.currentUser!, { displayName: fullName })
 

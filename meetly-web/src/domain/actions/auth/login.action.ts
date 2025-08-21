@@ -1,7 +1,7 @@
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../../../config/firebase/firebase-config"
 import type { AuthResponse, ErrorResponse } from "../../../infrastructure/interfaces/auth.response"
-import { fromUserToEntity } from "../../../infrastructure/mappers/user.mapper"
+import { UserMapper } from "../../../infrastructure/mappers/user.mapper"
 
 interface LoginActionParams {
   email: string
@@ -11,7 +11,7 @@ interface LoginActionParams {
 export async function loginAction({ email, password }: LoginActionParams): Promise<AuthResponse> {
   try {
     const result = await signInWithEmailAndPassword(auth, email, password)
-    const user = fromUserToEntity(result.user)
+    const user = UserMapper.fromUserToEntity(result.user)
 
     return {
       ok: true,
