@@ -1,5 +1,5 @@
 import Calendar from "../../components/calendar/calendar/calendar"
-import TaskList from "../../components/tasks/task-list"
+import TaskList from "../../components/tasks/task-list/task-list"
 import Title from "../../components/ui/title/title"
 
 export default function DashboardPage() {

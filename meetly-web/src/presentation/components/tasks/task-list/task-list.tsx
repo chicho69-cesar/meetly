@@ -1,0 +1,100 @@
+import { LayoutDashboard, ListTodo } from "lucide-react"
+import { useState } from "react"
+
+import { STATUS_OPTIONS } from "../../../../config/constants/tasks.constant"
+import { DatesHelper } from "../../../../config/helpers/dates.helper"
+import useTasks from "../../../hooks/use-tasks"
+import useUI from "../../../hooks/use-ui"
+import TaskModal from "../task-modal/task-modal"
+
+export default function TaskList() {
+  const { tasks } = useTasks()
+  const { taskView, setTaskView } = useUI()
+
+  const [showModal, setShowModal] = useState(false)
+
+  const handleToggleModal = () => {
+    setShowModal((prev) => !prev)
+  }
+
+  return (
+    <section className="w-full">
+      <div className="flex gap-4 items-stretch justify-end my-4">
+        <section className="flex items-stretch justify-center gap-0 bg-surface border-primary border rounded-lg overflow-hidden">
+          <button
+            className={`px-4 py-2 cursor-pointer font-semibold transition-colors ${taskView === "list" ? "bg-primary text-white" : "bg-surface text-primary hover:bg-primary/10"}`}
+            onClick={() => setTaskView("list")}
+          >
+            <ListTodo className="size-5 font-bold" />
+          </button>
+
+          <button
+            className={`px-4 py-2 cursor-pointer font-semibold transition-colors ${taskView === "kanban" ? "bg-primary text-white" : "bg-surface text-primary hover:bg-primary/10"}`}
+            onClick={() => setTaskView("kanban")}
+          >
+            <LayoutDashboard className="size-5 font-bold" />
+          </button>
+        </section>
+
+        <button
+          className="px-4 py-2 rounded-lg bg-accent text-white font-semibold shadow hover:bg-accent/90 transition cursor-pointer hover:scale-95"
+          onClick={handleToggleModal}
+        >
+          + Nueva tarea
+        </button>
+      </div>
+
+      {showModal && (
+        <TaskModal onCloseModal={handleToggleModal} />
+      )}
+
+      {taskView === "list" && (
+        <div className="bg-surface rounded-xl shadow p-4 divide-y divide-primary/10">
+          {tasks.map(task => (
+            <div key={task.id} className="flex flex-col md:flex-row md:items-center gap-2 py-4 group">
+              <div className="flex-1">
+                <h4 className="text-lg font-bold text-primary group-hover:underline cursor-pointer">{task.title}</h4>
+                <p className="text-secondary text-sm mb-1">{task.description}</p>
+                <div className="flex gap-4 text-xs text-secondary">
+                  <span className="font-semibold">Vence:</span> {DatesHelper.formatDate(task.dueDate)}
+                  <span className="font-semibold">Prioridad:</span> {task.priority}
+                  <span className="font-semibold">Estado:</span> {task.status}
+                </div>
+              </div>
+              <div className="flex gap-2 mt-2 md:mt-0">
+                <button className="px-3 py-1 rounded-lg bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition-colors" onClick={handleToggleModal}>Editar</button>
+                <button className="px-3 py-1 rounded-lg bg-red-100 text-red-600 font-semibold hover:bg-red-200 transition-colors">Eliminar</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {taskView === "kanban" && (
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {STATUS_OPTIONS.map((status) => (
+            <div key={status} className="flex-1 min-w-[260px] bg-surface rounded-xl shadow p-4">
+              <h3 className="text-lg font-bold text-primary mb-2 text-center">{status}</h3>
+              <div className="flex flex-col gap-3 min-h-[120px]">
+                {tasks.filter(t => t.status === status).map(task => (
+                  <div key={task.id} className="bg-background rounded-lg p-3 shadow group cursor-grab hover:shadow-lg transition-all border border-primary/10">
+                    <h4 className="font-bold text-primary text-base group-hover:underline">{task.title}</h4>
+                    <p className="text-secondary text-xs mb-1">{task.description}</p>
+                    <div className="flex gap-2 text-xs text-secondary">
+                      <span className="font-semibold">Vence:</span> {DatesHelper.formatDate(task.dueDate)}
+                      <span className="font-semibold">Prioridad:</span> {task.priority}
+                    </div>
+                    <div className="flex gap-2 mt-2">
+                      <button className="px-2 py-1 rounded bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition-colors text-xs" onClick={handleToggleModal}>Editar</button>
+                      <button className="px-2 py-1 rounded bg-red-100 text-red-600 font-semibold hover:bg-red-200 transition-colors text-xs">Eliminar</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  )
+}
