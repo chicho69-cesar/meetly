@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
+import { DatesHelper } from "../../../config/helpers/dates.helper"
 import { getWeeklyActivitySummaryAction } from "../../../domain/actions/dashboard/get-weekly-activity-summary.action"
 import type { WeeklyActivitySummary } from "../../../infrastructure/interfaces/summary.interface"
 import useAuthStore from "../../hooks/use-auth-store"
 
+/* TODO: Complete this component */
 export default function Notifications() {
   const { user } = useAuthStore()
   const [summary, setSummary] = useState<WeeklyActivitySummary>({
@@ -38,15 +40,6 @@ export default function Notifications() {
 
     if (user.id) fetchSummary()
   }, [user.id])
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date)
-  }
 
   return (
     <section className="w-full max-w-4xl mx-auto p-6 flex flex-col items-center">
@@ -126,7 +119,7 @@ export default function Notifications() {
                 <h3 className="font-semibold text-lg mb-2">Tarea más próxima</h3>
                 <p className="font-medium">{summary.nearestTask.title}</p>
                 <p className="text-sm text-gray-600">
-                  Vence: {formatDate(summary.nearestTask.dueDate)}
+                  Vence: {DatesHelper.formatDate(summary.nearestTask.dueDate)}
                 </p>
               </div>
             )}
@@ -136,7 +129,7 @@ export default function Notifications() {
                 <h3 className="font-semibold text-lg mb-2">Evento más próximo</h3>
                 <p className="font-medium">{summary.nearestEvent.title}</p>
                 <p className="text-sm text-gray-600">
-                  Inicia: {formatDate(summary.nearestEvent.startDate)}
+                  Inicia: {DatesHelper.formatDate(summary.nearestEvent.startDate)}
                 </p>
               </div>
             )}

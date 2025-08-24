@@ -7,6 +7,7 @@ export class TaskMapper {
     return {
       id: dto.id,
       title: dto.title,
+      description: dto.description,
       dueDate: dto.dueDate.toDate(),
       priority: dto.priority,
       status: dto.status,
@@ -19,6 +20,7 @@ export class TaskMapper {
   static toDto(entity: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Omit<TaskDto, 'id' | 'createdAt' | 'updatedAt'> {
     return {
       title: entity.title,
+      description: entity.description,
       dueDate: Timestamp.fromDate(entity.dueDate),
       priority: entity.priority,
       status: entity.status,
