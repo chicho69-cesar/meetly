@@ -1,9 +1,12 @@
 import { useCallback, useEffect } from "react"
 
+import { createTaskAction } from "../../domain/actions/tasks/create-task.action"
+import { deleteTaskAction } from "../../domain/actions/tasks/delete-task.action"
 import { getUserTasksAction } from "../../domain/actions/tasks/get-user-tasks.action"
+import { updateTaskAction } from "../../domain/actions/tasks/update-task.action"
 import type { Task } from "../../domain/entities/task.entity"
-import { onError } from "../store/auth/auth.slice"
-import { fetchTasks, onFetchingTasks } from "../store/tasks/tasks.slice"
+import type { CreateUpdateTaskDto } from "../../infrastructure/dtos/task.dto"
+import { addTask, deleteTask, fetchTasks, onEditTask, onError, onFetchingTasks, updateTask } from "../store/tasks/tasks.slice"
 import useAuthStore from "./use-auth-store"
 import { useMeetlyDispatch, useMeetlySelector } from "./use-store"
 
@@ -31,16 +34,55 @@ export default function useTasks() {
     initTasks()
   }, [initTasks])
 
-  const handleAddTask = (task: Task) => {
-    console.log("Add task", task)
+  const handleAddTask = async (task: Omit<CreateUpdateTaskDto, "userId">) => {
+    const data = await createTaskAction({
+      ...task,
+      userId: user?.id || "",
+    })
+
+    if (data.success) {
+      const newTask: Task = {
+        id: data.data || "",
+        ...task,
+        userId: user?.id || "",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+
+      dispatch(addTask(newTask))
+    }
+
+    if (!data.success) {
+      dispatch(onError(data.error || "Error desconocido"))
+    }
   }
 
-  const handleUpdateTask = (task: Task) => {
-    console.log("Update task", task)
+  const handleUpdateTask = async (task: Task) => {
+    const data = await updateTaskAction(task.id, task)
+
+    if (data.success) {
+      dispatch(updateTask(task))
+    }
+
+    if (!data.success) {
+      dispatch(onError(data.error || "Error desconocido"))
+    }
   }
 
-  const handleDeleteTask = (taskId: string) => {
-    console.log("Delete task", taskId)
+  const handleDeleteTask = async (taskId: string) => {
+    const data = await deleteTaskAction(taskId)
+
+    if (data.success) {
+      dispatch(deleteTask(taskId))
+    }
+
+    if (!data.success) {
+      dispatch(onError(data.error || "Error desconocido"))
+    }
+  }
+
+  const handleSetEditingTask = (task: Task | null) => {
+    dispatch(onEditTask(task))
   }
 
   return {
@@ -53,5 +95,7 @@ export default function useTasks() {
     handleAddTask,
     handleUpdateTask,
     handleDeleteTask,
+
+    handleSetEditingTask,
   }
 }

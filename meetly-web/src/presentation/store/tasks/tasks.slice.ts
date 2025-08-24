@@ -51,6 +51,7 @@ export const tasksSlice = createSlice({
       }
 
       state.tasks[index] = updatedTask
+      state.editingTask = null
     },
 
     deleteTask: (state, action) => {
