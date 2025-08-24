@@ -143,7 +143,7 @@ export default function TaskList() {
                           </p>
 
                           <p>
-                            <span className="font-semibold">Prioridad: </span>{task.priority}
+                            <span className="font-semibold">Prioridad: </span>{PRIORITY_DISPLAY_MAP[task.priority]}
                           </p>
                         </div>
 

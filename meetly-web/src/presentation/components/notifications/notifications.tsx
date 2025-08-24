@@ -1,11 +1,12 @@
+import "./notifications.styles.css"
+
 import { DatesHelper } from "../../../config/helpers/dates.helper"
 import useDashboardStats from "../../hooks/use-dashboard-stats"
 
 export default function Notifications() {
   const {
     summary,
-    // nextMeeting,
-    // todayPendingTasks,
+    todayPendingTasks,
     loading,
     error
   } = useDashboardStats()
@@ -58,9 +59,9 @@ export default function Notifications() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className={`grid grid-cols-1 gap-4 ${summary.nearestTask ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
             <div className="bg-surface rounded-xl p-2 border border-primary/20">
-              <h3 className="font-semibold text-lg mb-2 text-secondary">
+              <h3 className="font-semibold text-lg mb-1 text-secondary">
                 Progreso semanal
               </h3>
 
@@ -77,30 +78,28 @@ export default function Notifications() {
             </div>
 
             <div className="bg-surface rounded-xl p-2 border border-primary/20">
-              <h3 className="font-semibold text-lg mb-2 text-secondary">
+              <h3 className="font-semibold text-lg mb-1 text-secondary">
                 Tendencia semanal
               </h3>
 
               <div className="flex items-center">
-                <span className={`text-xl font-bold ${summary.trendComparedToLastWeek >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                <span className={`text-lg font-bold ${summary.trendComparedToLastWeek >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                   {summary.trendComparedToLastWeek >= 0 ? '↑' : '↓'} {Math.abs(summary.trendComparedToLastWeek)}%
                 </span>
 
-                <span className="ml-2 text-xs">
+                <span className="ml-2 text-xs text-secondary">
                   {summary.trendComparedToLastWeek >= 0 ? 'más que la semana pasada' : 'menos que la semana pasada'}
                 </span>
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {summary.nearestTask && (
               <div className="bg-surface rounded-xl p-2 border border-primary/20">
-                <h3 className="font-semibold text-lg mb-2 text-secondary">
+                <h3 className="font-semibold text-lg mb-1 text-secondary">
                   Tarea más próxima
                 </h3>
 
-                <p className="font-medium text-accent text-base">
+                <p className="font-medium text-accent text-sm">
                   {summary.nearestTask.title}
                 </p>
 
@@ -109,27 +108,11 @@ export default function Notifications() {
                 </p>
               </div>
             )}
-
-            {summary.nearestEvent && (
-              <div className="bg-surface rounded-xl p-2 border border-primary/20">
-                <h3 className="font-semibold text-lg mb-2 text-secondary">
-                  Evento más próximo
-                </h3>
-
-                <p className="font-medium text-accent text-base">
-                  {summary.nearestEvent.title}
-                </p>
-
-                <p className="text-xs text-gray-600">
-                  Inicia: {DatesHelper.formatDate(summary.nearestEvent.startDate)}
-                </p>
-              </div>
-            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-surface rounded-xl p-2 border border-primary/20">
-              <h3 className="font-semibold text-lg mb-2 text-secondary">
+              <h3 className="font-semibold text-lg mb-1 text-secondary">
                 Distribución por prioridad
               </h3>
 
@@ -161,7 +144,7 @@ export default function Notifications() {
             </div>
 
             <div className="bg-surface rounded-xl p-2 border border-primary/20">
-              <h3 className="font-semibold text-lg mb-2 text-secondary">
+              <h3 className="font-semibold text-lg mb-1 text-secondary">
                 Otras métricas
               </h3>
 
@@ -193,7 +176,57 @@ export default function Notifications() {
             </div>
           </div>
 
-          {/*  */}
+          <div>
+            <h3 className="font-semibold text-lg mb-2 text-secondary">
+              Tareas pendientes de hoy
+            </h3>
+
+            {todayPendingTasks.length === 0 ? (
+              <div className="text-secondary text-base text-center py-4">
+                No tienes tareas pendientes para hoy 🎉
+              </div>
+            ) : (
+              <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar custom-scrollbar">
+                {todayPendingTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="min-w-[260px] bg-surface rounded-xl p-2 border border-primary/20 flex flex-col justify-between"
+                  >
+                    <h4 className="font-bold text-primary text-sm mb-0.5">
+                      {task.title}
+                    </h4>
+
+                    <p className="text-secondary text-xs mb-2">
+                      {task.description}
+                    </p>
+
+                    <div className="flex gap-3 justify-between text-xs text-secondary mb-1">
+                      <p className="flex flex-col">
+                        <span className="font-semibold">Vence: </span>
+                        <span>{DatesHelper.formatDate(task.dueDate)}</span>
+                      </p>
+
+                      <p className="flex flex-col">
+                        <span className="font-semibold">Prioridad: </span>
+
+                        <span
+                          className={
+                            task.priority === 'high'
+                              ? 'text-red-500'
+                              : task.priority === 'medium'
+                                ? 'text-yellow-500'
+                                : 'text-green-500'
+                          }
+                        >
+                          {task.priority === 'high' ? 'Alta' : task.priority === 'medium' ? 'Media' : 'Baja'}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </section>
