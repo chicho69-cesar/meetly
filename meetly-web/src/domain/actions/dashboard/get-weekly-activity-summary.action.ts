@@ -1,4 +1,5 @@
 import { collection, getDocs, orderBy, query, Timestamp, where } from "firebase/firestore"
+
 import { FIRESTORE_EVENTS_COLLECTION, FIRESTORE_TASKS_COLLECTION } from "../../../config/constants/firebase.constant"
 import { firestore } from "../../../config/firebase/firebase-config"
 import type { ApiResponse } from "../../../infrastructure/interfaces/api.response"
@@ -15,7 +16,6 @@ export async function getWeeklyActivitySummaryAction(userId: string): Promise<Ap
     weekEnd.setDate(weekEnd.getDate() + 7)
     weekEnd.setHours(23, 59, 59, 999)
 
-    // Semana anterior para comparación
     const lastWeekStart = new Date(weekStart)
     lastWeekStart.setDate(lastWeekStart.getDate() - 7)
 
@@ -23,7 +23,6 @@ export async function getWeeklyActivitySummaryAction(userId: string): Promise<Ap
     lastWeekEnd.setDate(lastWeekEnd.getDate() + 7)
     lastWeekEnd.setHours(23, 59, 59, 999)
 
-    // Consultas para la semana actual
     const completedTasksQuery = query(
       collection(firestore, FIRESTORE_TASKS_COLLECTION),
       where("userId", "==", userId),
@@ -105,7 +104,6 @@ export async function getWeeklyActivitySummaryAction(userId: string): Promise<Ap
       where("priority", "==", "low")
     )
 
-    // Consultas para la semana anterior (para comparación)
     const lastWeekCompletedTasksQuery = query(
       collection(firestore, FIRESTORE_TASKS_COLLECTION),
       where("userId", "==", userId),
@@ -114,7 +112,6 @@ export async function getWeeklyActivitySummaryAction(userId: string): Promise<Ap
       where("updatedAt", "<=", Timestamp.fromDate(lastWeekEnd))
     )
 
-    // Ejecutar todas las consultas en paralelo
     const [
       completedTasksSnapshot,
       allTasksThisWeekSnapshot,
@@ -145,14 +142,12 @@ export async function getWeeklyActivitySummaryAction(userId: string): Promise<Ap
       getDocs(lastWeekCompletedTasksQuery)
     ])
 
-    // Calcular progreso semanal
     const totalTasksThisWeek = allTasksThisWeekSnapshot.size
     const completedTasksThisWeek = completedTasksSnapshot.size
     const weeklyProgress = totalTasksThisWeek > 0
       ? Math.round((completedTasksThisWeek / totalTasksThisWeek) * 100)
       : 0
 
-    // Calcular tendencia respecto a la semana anterior
     const lastWeekCompletedTasks = lastWeekCompletedTasksSnapshot.size
     let trendComparedToLastWeek = 0
 
@@ -161,17 +156,16 @@ export async function getWeeklyActivitySummaryAction(userId: string): Promise<Ap
         ((completedTasksThisWeek - lastWeekCompletedTasks) / lastWeekCompletedTasks) * 100
       )
     } else if (completedTasksThisWeek > 0) {
-      trendComparedToLastWeek = 100 // No había tareas la semana pasada, pero sí esta semana
+      trendComparedToLastWeek = 100
     }
 
-    // Calcular promedio diario de tareas completadas
-    const daysPassedThisWeek = Math.min(now.getDay() + 1, 7) // +1 porque getDay() devuelve 0-6 (dom-sáb)
+    const daysPassedThisWeek = Math.min(now.getDay() + 1, 7)
     const dailyAverageCompleted = daysPassedThisWeek > 0
       ? parseFloat((completedTasksThisWeek / daysPassedThisWeek).toFixed(1))
       : 0
 
-    // Obtener tarea más próxima a vencer
     let nearestTask = undefined
+
     if (!nearestTaskSnapshot.empty) {
       const taskData = nearestTaskSnapshot.docs[0].data()
       nearestTask = {
@@ -180,8 +174,8 @@ export async function getWeeklyActivitySummaryAction(userId: string): Promise<Ap
       }
     }
 
-    // Obtener evento más próximo
     let nearestEvent = undefined
+
     if (!nearestEventSnapshot.empty) {
       const eventData = nearestEventSnapshot.docs[0].data()
       nearestEvent = {
@@ -190,7 +184,6 @@ export async function getWeeklyActivitySummaryAction(userId: string): Promise<Ap
       }
     }
 
-    // Crear el resumen completo
     const summary: WeeklyActivitySummary = {
       completedTasks: completedTasksThisWeek,
       pendingTasks: pendingTasksSnapshot.size,
