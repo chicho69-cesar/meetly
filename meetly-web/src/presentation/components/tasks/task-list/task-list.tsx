@@ -105,29 +105,77 @@ export default function TaskList() {
       )}
 
       {taskView === "kanban" && (
-        <div className="flex gap-4 overflow-x-auto pb-2">
-          {STATUS_OPTIONS.map((status) => (
-            <div key={status} className="flex-1 min-w-[260px] bg-surface rounded-xl shadow p-4">
-              <h3 className="text-lg font-bold text-primary mb-2 text-center">{status}</h3>
-              <div className="flex flex-col gap-3 min-h-[120px]">
-                {tasks.filter((t) => t.status === status).map((task) => (
-                  <div key={task.id} className="bg-background rounded-lg p-3 shadow group cursor-grab hover:shadow-lg transition-all border border-primary/10">
-                    <h4 className="font-bold text-primary text-base group-hover:underline">{task.title}</h4>
-                    <p className="text-secondary text-xs mb-1">{task.description}</p>
-                    <div className="flex gap-2 text-xs text-secondary">
-                      <span className="font-semibold">Vence:</span> {DatesHelper.formatDate(task.dueDate)}
-                      <span className="font-semibold">Prioridad:</span> {task.priority}
-                    </div>
-                    <div className="flex gap-2 mt-2">
-                      <button className="px-2 py-1 rounded bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition-colors text-xs" onClick={handleToggleModal}>Editar</button>
-                      <button className="px-2 py-1 rounded bg-red-100 text-red-600 font-semibold hover:bg-red-200 transition-colors text-xs">Eliminar</button>
-                    </div>
+        <section className="flex gap-4 overflow-x-auto pb-2">
+          {STATUS_OPTIONS.map((status) => {
+            const statusTasks = tasks.filter((t) => STATUS_DISPLAY_MAP[t.status] === status)
+
+            return (
+              <div
+                key={status}
+                className="flex-1 min-w-[260px] bg-surface rounded-xl shadow p-4"
+              >
+                <h3 className="text-lg font-bold text-primary mb-2 text-center">
+                  {status}
+                </h3>
+
+                {statusTasks.length === 0 ? (
+                  <p className="text-secondary text-sm text-center">
+                    No hay tareas en estado {status.toLowerCase()}
+                  </p>
+                ) : (
+                  <div className="flex flex-col gap-3 min-h-[120px]">
+                    {statusTasks.map((task) => (
+                      <article
+                        key={task.id}
+                        className="bg-surface rounded-lg p-3 group cursor-grab hover:shadow transition-all border border-primary/20 border-dashed"
+                      >
+                        <h4 className="font-bold text-primary text-base group-hover:underline">
+                          {task.title}
+                        </h4>
+
+                        <p className="text-secondary text-xs mb-1">
+                          {task.description}
+                        </p>
+
+                        <div className="flex gap-2 text-xs text-secondary">
+                          <p>
+                            <span className="font-semibold">Vence: </span>{DatesHelper.formatDate(task.dueDate)}
+                          </p>
+
+                          <p>
+                            <span className="font-semibold">Prioridad: </span>{task.priority}
+                          </p>
+                        </div>
+
+                        <div className="flex gap-2 mt-2">
+                          <button
+                            className="p-2 cursor-pointer rounded-lg bg-primary/10 text-primary font-semibold hover:bg-primary/20 transition-colors"
+                            onClick={() => {
+                              handleSetEditingTask(task)
+                              handleToggleModal()
+                            }}
+                          >
+                            <Pencil className="size-4" />
+                          </button>
+
+                          <button
+                            className="p-2 cursor-pointer rounded-lg bg-red-100 text-red-600 font-semibold hover:bg-red-200 transition-colors"
+                            onClick={() => {
+                              setTaskToDelete(task.id)
+                              setShowDeleteModal(true)
+                            }}
+                          >
+                            <Trash2 className="size-4" />
+                          </button>
+                        </div>
+                      </article>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
-            </div>
-          ))}
-        </div>
+            )
+          })}
+        </section>
       )}
 
       {showModal && (
