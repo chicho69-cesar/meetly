@@ -1,6 +1,7 @@
 import { configureStore, type Middleware } from "@reduxjs/toolkit"
 import { THEME_STORAGE_KEY } from "../../config/constants/storage.constant"
 import { authSlice } from "./auth/auth.slice"
+import { tasksSlice } from "./tasks/tasks.slice"
 import { uiSlice } from "./ui/ui.slice"
 
 const persistenceLocalStorageMiddleware: Middleware = (store) => (next) => (action) => {
@@ -16,6 +17,7 @@ export const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
     ui: uiSlice.reducer,
+    tasks: tasksSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
