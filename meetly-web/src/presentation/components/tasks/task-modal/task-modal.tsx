@@ -1,4 +1,4 @@
-import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "../../../../config/constants/tasks.constant"
+import { PRIORITY_DISPLAY_MAP, PRIORITY_OPTIONS, PRIORITY_SAVE_MAP, STATUS_DISPLAY_MAP, STATUS_OPTIONS, STATUS_SAVE_MAP } from "../../../../config/constants/tasks.constant"
 import useTasks from "../../../hooks/use-tasks"
 
 interface TaskModalProps {
@@ -6,7 +6,39 @@ interface TaskModalProps {
 }
 
 export default function TaskModal({ onCloseModal }: TaskModalProps) {
-  const { editingTask } = useTasks()
+  const { editingTask, handleAddTask, handleUpdateTask, handleSetEditingTask } = useTasks()
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const formData = new FormData(e.currentTarget)
+    const title = formData.get("title") as string
+    const description = formData.get("description") as string
+    const dueDate = formData.get("dueDate") as string
+    const priority = formData.get("priority") as string
+    const status = formData.get("status") as string
+
+    if (!editingTask) {
+      await handleAddTask({
+        title,
+        description,
+        dueDate: new Date(dueDate),
+        priority: PRIORITY_SAVE_MAP[priority.toLowerCase()],
+        status: STATUS_SAVE_MAP[status.toLowerCase()],
+      })
+    } else {
+      await handleUpdateTask({
+        ...editingTask,
+        title,
+        description,
+        dueDate: new Date(dueDate),
+        priority: PRIORITY_SAVE_MAP[priority.toLowerCase()],
+        status: STATUS_SAVE_MAP[status.toLowerCase()],
+      })
+    }
+
+    onCloseModal()
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -20,44 +52,58 @@ export default function TaskModal({ onCloseModal }: TaskModalProps) {
           {editingTask ? "Editar tarea" : "Nueva tarea"}
         </h3>
 
-        <form className="flex flex-col gap-4">
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={handleSubmit}
+        >
           <input
+            type="text"
+            id="title"
+            name="title"
             className="px-4 py-2 rounded-lg border border-primary/20 bg-surface focus:outline-none focus:ring-2 focus:ring-primary text-base"
             placeholder="Título"
             defaultValue={editingTask?.title || ""}
           />
 
           <textarea
+            id="description"
+            name="description"
             className="px-4 py-2 rounded-lg border border-primary/20 bg-surface focus:outline-none focus:ring-2 focus:ring-primary text-base"
             placeholder="Descripción"
             defaultValue={editingTask?.description || ""}
           />
 
-          <div className="flex gap-2">
-            <input
-              type="date"
-              className="flex-1 px-4 py-2 rounded-lg border border-primary/20 bg-surface focus:outline-none focus:ring-2 focus:ring-primary text-base"
-              defaultValue={editingTask ? new Date(editingTask.dueDate).toISOString().split("T")[0] : ""}
-            />
+          <input
+            type="datetime-local"
+            id="dueDate"
+            name="dueDate"
+            className="px-4 py-2 rounded-lg border border-primary/20 bg-surface focus:outline-none focus:ring-2 focus:ring-primary text-base"
+            defaultValue={editingTask ? editingTask.dueDate.toISOString().slice(0, 16) : ""}
+          />
 
+          <div className="flex gap-2">
             <select
+              id="priority"
+              name="priority"
               className="flex-1 px-4 py-2 rounded-lg border border-primary/20 bg-surface focus:outline-none focus:ring-2 focus:ring-primary text-base"
-              defaultValue={editingTask?.priority || "Media"}
+              defaultValue={PRIORITY_DISPLAY_MAP[editingTask?.priority || "medium"]}
             >
               {PRIORITY_OPTIONS.map((p) => <option key={p}>{p}</option>)}
             </select>
-          </div>
 
-          <select
-            className="px-4 py-2 rounded-lg border border-primary/20 bg-surface focus:outline-none focus:ring-2 focus:ring-primary text-base"
-            defaultValue={editingTask?.status || "Pendiente"}
-          >
-            {STATUS_OPTIONS.map((s) => <option key={s}>{s}</option>)}
-          </select>
+            <select
+              id="status"
+              name="status"
+              className="flex-1 px-4 py-2 rounded-lg border border-primary/20 bg-surface focus:outline-none focus:ring-2 focus:ring-primary text-base"
+              defaultValue={STATUS_DISPLAY_MAP[editingTask?.status || "pending"]}
+            >
+              {STATUS_OPTIONS.map((s) => <option key={s}>{s}</option>)}
+            </select>
+          </div>
 
           <div className="flex gap-2 mt-2">
             <button
-              type="button"
+              type="submit"
               className="flex-1 py-2 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition-colors cursor-pointer"
             >
               Guardar
@@ -66,7 +112,10 @@ export default function TaskModal({ onCloseModal }: TaskModalProps) {
             <button
               type="button"
               className="flex-1 py-2 rounded-lg bg-secondary text-white font-semibold hover:bg-secondary/80 transition-colors cursor-pointer"
-              onClick={onCloseModal}
+              onClick={() => {
+                onCloseModal()
+                handleSetEditingTask(null)
+              }}
             >
               Cancelar
             </button>
