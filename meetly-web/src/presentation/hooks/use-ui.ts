@@ -1,9 +1,9 @@
 import type { Theme } from "../../infrastructure/interfaces/theme.interface"
-import { openModal, setTheme } from "../store/ui/ui.slice"
+import { openModal, setTaskView, setTheme } from "../store/ui/ui.slice"
 import { useMeetlyDispatch, useMeetlySelector } from "./use-store"
 
 export default function useUI() {
-  const { modal, theme } = useMeetlySelector((state) => state.ui)
+  const { modal, theme, taskView } = useMeetlySelector((state) => state.ui)
   const dispatch = useMeetlyDispatch()
 
   const handleOpenModal = (modalType: "bell" | "settings" | "user") => {
@@ -18,11 +18,18 @@ export default function useUI() {
     dispatch(setTheme(newTheme))
   }
 
+  const handleSetTaskView = (newView: "list" | "kanban") => {
+    dispatch(setTaskView(newView))
+  }
+
   return {
     modal,
     theme,
+    taskView,
+
     openModal: handleOpenModal,
     closeModal: handleCloseModal,
     setTheme: handleSetTheme,
+    setTaskView: handleSetTaskView,
   }
 }
