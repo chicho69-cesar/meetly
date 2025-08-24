@@ -2,11 +2,11 @@ import { addDoc, collection, Timestamp } from "firebase/firestore"
 
 import { FIRESTORE_TASKS_COLLECTION } from "../../../config/constants/firebase.constant"
 import { firestore } from "../../../config/firebase/firebase-config"
+import type { CreateUpdateTaskDto } from "../../../infrastructure/dtos/task.dto"
 import type { ApiResponse } from "../../../infrastructure/interfaces/api.response"
 import { TaskMapper } from "../../../infrastructure/mappers/task.mapper"
-import type { Task } from "../../entities/task.entity"
 
-export async function createTaskAction(task: Omit<Task, "id" | "createdAt" | "updatedAt">): Promise<ApiResponse<string>> {
+export async function createTaskAction(task: CreateUpdateTaskDto): Promise<ApiResponse<string>> {
   try {
     const taskDto = TaskMapper.toDto(task)
     const tasksRef = collection(firestore, FIRESTORE_TASKS_COLLECTION)

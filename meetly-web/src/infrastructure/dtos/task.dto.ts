@@ -11,3 +11,12 @@ export interface TaskDto {
   createdAt: Timestamp
   updatedAt: Timestamp
 }
+
+export interface CreateUpdateTaskDto {
+  title: string
+  description: string
+  dueDate: Date
+  priority: "low" | "medium" | "high"
+  status: "pending" | "in-progress" | "completed"
+  userId: string
+}

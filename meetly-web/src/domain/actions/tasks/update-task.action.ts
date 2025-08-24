@@ -2,12 +2,12 @@ import { doc, Timestamp, updateDoc } from "firebase/firestore"
 
 import { FIRESTORE_TASKS_COLLECTION } from "../../../config/constants/firebase.constant"
 import { firestore } from "../../../config/firebase/firebase-config"
+import type { CreateUpdateTaskDto } from "../../../infrastructure/dtos/task.dto"
 import type { ApiResponse } from "../../../infrastructure/interfaces/api.response"
-import type { Task } from "../../entities/task.entity"
 
 export async function updateTaskAction(
   taskId: string,
-  task: Partial<Omit<Task, "id" | "createdAt" | "updatedAt">>
+  task: Partial<CreateUpdateTaskDto>
 ): Promise<ApiResponse<void>> {
   try {
     const taskRef = doc(firestore, FIRESTORE_TASKS_COLLECTION, taskId)
