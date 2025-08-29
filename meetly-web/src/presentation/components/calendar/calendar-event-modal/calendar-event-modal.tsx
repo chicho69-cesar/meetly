@@ -1,15 +1,17 @@
-import type { Event } from "../../../../domain/entities/event.entity"
+import { THEMES_COLORS } from "../../../../config/constants/themes.constant"
+import type { DatesEvent } from "../../../../infrastructure/interfaces/dates.interface"
+import useEvents from "../../../hooks/use-events"
+import useUI from "../../../hooks/use-ui"
 
 interface CalendarEventModalProps {
-  onClose: () => void
-  editingEvent?: Event
-  dates?: {
-    startDate: string
-    endDate: string
-  }
+  onCloseModal: () => void
+  dates: DatesEvent | null
 }
 
-export default function CalendarEventModal({ onClose, editingEvent, dates }: CalendarEventModalProps) {
+export default function CalendarEventModal({ onCloseModal, dates }: CalendarEventModalProps) {
+  const { editingEvent, handleAddEvent, handleUpdateEvent, handleSetEditingEvent } = useEvents()
+  const { theme } = useUI()
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -22,22 +24,33 @@ export default function CalendarEventModal({ onClose, editingEvent, dates }: Cal
     const tags = (formData.get("tags") as string).split(",").map((tag) => tag.trim()).filter((tag) => tag.length > 0)
     const color = formData.get("color") as string
 
-    console.log({
+    const data = {
       title,
       description,
-      startDate,
-      endDate,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
       meetingLink,
       tags,
       color,
-    })
+    }
+
+    if (!editingEvent) {
+      await handleAddEvent(data)
+    } else {
+      await handleUpdateEvent({
+        ...editingEvent,
+        ...data,
+      })
+    }
+
+    onCloseModal()
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={onCloseModal}
       />
 
       <div className="relative z-10 w-full max-w-md mx-auto bg-surface rounded-2xl shadow-2xl p-8 animate-modal-in">
@@ -114,7 +127,7 @@ export default function CalendarEventModal({ onClose, editingEvent, dates }: Cal
                 id="color"
                 name="color"
                 className="size-9 p-0 border-none outline-none bg-transparent cursor-pointer"
-                defaultValue={editingEvent?.color || "#3b82f6"}
+                defaultValue={editingEvent?.color || THEMES_COLORS[theme]}
                 title="Color del evento"
                 aria-label="Color del evento"
               />
@@ -132,7 +145,10 @@ export default function CalendarEventModal({ onClose, editingEvent, dates }: Cal
             <button
               type="button"
               className="flex-1 py-2 rounded-lg bg-secondary text-white font-semibold hover:bg-secondary/80 transition-colors cursor-pointer"
-              onClick={onClose}
+              onClick={() => {
+                handleSetEditingEvent(null)
+                onCloseModal()
+              }}
             >
               Cancelar
             </button>
