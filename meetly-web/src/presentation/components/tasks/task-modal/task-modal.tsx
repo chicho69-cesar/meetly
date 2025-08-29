@@ -18,22 +18,20 @@ export default function TaskModal({ onCloseModal }: TaskModalProps) {
     const priority = formData.get("priority") as string
     const status = formData.get("status") as string
 
+    const data = {
+      title,
+      description,
+      dueDate: new Date(dueDate),
+      priority: PRIORITY_SAVE_MAP[priority.toLowerCase()],
+      status: STATUS_SAVE_MAP[status.toLowerCase()],
+    }
+
     if (!editingTask) {
-      await handleAddTask({
-        title,
-        description,
-        dueDate: new Date(dueDate),
-        priority: PRIORITY_SAVE_MAP[priority.toLowerCase()],
-        status: STATUS_SAVE_MAP[status.toLowerCase()],
-      })
+      await handleAddTask(data)
     } else {
       await handleUpdateTask({
         ...editingTask,
-        title,
-        description,
-        dueDate: new Date(dueDate),
-        priority: PRIORITY_SAVE_MAP[priority.toLowerCase()],
-        status: STATUS_SAVE_MAP[status.toLowerCase()],
+        ...data,
       })
     }
 
@@ -113,8 +111,8 @@ export default function TaskModal({ onCloseModal }: TaskModalProps) {
               type="button"
               className="flex-1 py-2 rounded-lg bg-secondary text-white font-semibold hover:bg-secondary/80 transition-colors cursor-pointer"
               onClick={() => {
-                onCloseModal()
                 handleSetEditingTask(null)
+                onCloseModal()
               }}
             >
               Cancelar

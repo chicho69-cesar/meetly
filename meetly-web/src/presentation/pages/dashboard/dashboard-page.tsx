@@ -1,4 +1,5 @@
 import Calendar from "../../components/calendar/calendar/calendar"
+import NextMeeting from "../../components/next-meeting/next-meeting"
 import TaskList from "../../components/tasks/task-list/task-list"
 import Title from "../../components/ui/title/title"
 
@@ -10,6 +11,7 @@ export default function DashboardPage() {
         subtitle="Panel de control de Meetly para gestionar eventos y tareas"
       />
 
+      <NextMeeting />
       <Calendar />
 
       <div className="mt-12">
