@@ -2,12 +2,12 @@ import { doc, Timestamp, updateDoc } from "firebase/firestore"
 
 import { FIRESTORE_EVENTS_COLLECTION } from "../../../config/constants/firebase.constant"
 import { firestore } from "../../../config/firebase/firebase-config"
+import type { CreateUpdateEventDto } from "../../../infrastructure/dtos/event.dto"
 import type { ApiResponse } from "../../../infrastructure/interfaces/api.response"
-import type { Event } from "../../entities/event.entity"
 
 export async function updateEventAction(
   eventId: string,
-  event: Partial<Omit<Event, "id" | "createdAt" | "updatedAt">>
+  event: Partial<CreateUpdateEventDto>
 ): Promise<ApiResponse<void>> {
   try {
     const eventRef = doc(firestore, FIRESTORE_EVENTS_COLLECTION, eventId)
