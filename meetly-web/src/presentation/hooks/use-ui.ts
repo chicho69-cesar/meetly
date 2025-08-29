@@ -1,9 +1,10 @@
+import type { View } from "react-big-calendar"
 import type { Theme } from "../../infrastructure/interfaces/theme.interface"
-import { openModal, setTaskView, setTheme } from "../store/ui/ui.slice"
+import { openModal, setCalendarView, setTaskView, setTheme } from "../store/ui/ui.slice"
 import { useMeetlyDispatch, useMeetlySelector } from "./use-store"
 
 export default function useUI() {
-  const { modal, theme, taskView } = useMeetlySelector((state) => state.ui)
+  const { modal, theme, calendarView, taskView } = useMeetlySelector((state) => state.ui)
   const dispatch = useMeetlyDispatch()
 
   const handleOpenModal = (modalType: "bell" | "settings" | "user") => {
@@ -18,6 +19,10 @@ export default function useUI() {
     dispatch(setTheme(newTheme))
   }
 
+  const handleSetCalendarView = (newView: View) => {
+    dispatch(setCalendarView(newView))
+  }
+
   const handleSetTaskView = (newView: "list" | "kanban") => {
     dispatch(setTaskView(newView))
   }
@@ -25,11 +30,13 @@ export default function useUI() {
   return {
     modal,
     theme,
+    calendarView,
     taskView,
 
     openModal: handleOpenModal,
     closeModal: handleCloseModal,
     setTheme: handleSetTheme,
+    setCalendarView: handleSetCalendarView,
     setTaskView: handleSetTaskView,
   }
 }
