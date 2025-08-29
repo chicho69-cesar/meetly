@@ -13,3 +13,14 @@ export interface EventDto {
   createdAt: Timestamp
   updatedAt: Timestamp
 }
+
+export interface CreateUpdateEventDto {
+  title: string
+  description: string
+  startDate: Date
+  endDate: Date
+  meetingLink?: string
+  tags: string[]
+  color: string
+  userId: string
+}
